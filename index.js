@@ -1,14 +1,14 @@
 const { connection } = require("./db");
-// const cors=require("cors")
+const cors=require("cors")
 const express=require("express");
 const { userRoute } = require("./Route/UserRoute");
-const { postRoute } = require("./Route/PosRoute");
+const { postRoute } = require("./Route/PostRoute");
 // const { postRoute } = require("./Route/PosRoute");
 const app= express();
 app.use(express.json())
-// app.use(cors())
+app.use(cors())
 app.use("/users",userRoute)
-app.use("/posts",postRoute)
+app.use("/products",postRoute)
  app.listen(8080,async()=>{
    try {
     await connection

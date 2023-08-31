@@ -4,6 +4,16 @@ const jwt= require("jsonwebtoken");
 const bcrypt=require("bcrypt")
 const BlackList = require("../Model/BlackListModel");
 const userRoute=express.Router();
+userRoute.get("/",async(req,res)=>{
+  try {
+    const AllUser= await UserModel.find()
+    res.status(200).send(AllUser)
+    
+  } catch (error) {
+    res.status(200).send({mess:error})
+  }
+  
+})
 
 userRoute.post("/register",async(req,res)=>{
    const resUser= req.body
@@ -11,8 +21,9 @@ userRoute.post("/register",async(req,res)=>{
    try {
     const AlraidyExitst= await UserModel.findOne({email:resUser.email})
     if(AlraidyExitst){
-        res.status(200).send({message:`user whose mail ${resUser.email} is alraiday resistered`})
+        res.status(200).json({message:`user whose mail ${resUser.email} is alraiday resistered`})
     }
+    else{
     bcrypt.hash(resUser.password,3,async(err,hash)=>{
         if(err) res.status(404).send({message:err})
         const registerUser=new UserModel({...resUser,password:hash})
@@ -20,8 +31,7 @@ userRoute.post("/register",async(req,res)=>{
         res.status(200).send({message:"new user resistered"})
 
     })
-
-    
+  }   
 } catch (error) {
     res.status(404).send({message:error})
 }
@@ -29,8 +39,8 @@ userRoute.post("/register",async(req,res)=>{
 userRoute.post("/login",async(req,res)=>{
     const { email, password } = req.body;
     try {
-      const user = await UserModel.findOne({ email });
-    //   console.log(user);
+      const user = await UserModel.findOne({ email:email });
+      // console.log("user-->",user);
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
