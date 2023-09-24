@@ -1,13 +1,13 @@
 const express= require("express");
-const { UserModel } = require("../Model/userModel");
+const { AdminModel } = require("../Model/AdminModel");
 const jwt= require("jsonwebtoken");
 const bcrypt=require("bcrypt")
 const BlackList = require("../Model/BlackListModel");
-const userRoute=express.Router();
-userRoute.get("/",async(req,res)=>{
+const AdminRoute=express.Router();
+AdminRoute.get("/",async(req,res)=>{
   try {
-    const AllUser= await UserModel.find()
-    res.status(200).send(AllUser)
+    const AllAdmin= await AdminModel.find()
+    res.status(200).send(AllAdmin)
     
   } catch (error) {
     res.status(200).send({mess:error})
@@ -15,20 +15,20 @@ userRoute.get("/",async(req,res)=>{
   
 })
 
-userRoute.post("/register",async(req,res)=>{
-   const resUser= req.body
-   console.log(resUser);
+AdminRoute.post("/register",async(req,res)=>{
+   const resAdmin= req.body
+   console.log(resAdmin);
    try {
-    const AlraidyExitst= await UserModel.findOne({email:resUser.email})
+    const AlraidyExitst= await AdminModel.findOne({email:resAdmin.email})
     if(AlraidyExitst){
-        res.status(200).json({message:`user whose mail ${resUser.email} is alraiday resistered`,name:AlraidyExitst.name})
+        res.status(200).json({message:`Admin whose mail ${resAdmin.email} is alraiday resistered`,name:AlraidyExitst.name})
     }
     else{
-    bcrypt.hash(resUser.password,3,async(err,hash)=>{
+    bcrypt.hash(resAdmin.password,5,async(err,hash)=>{
         if(err) res.status(404).send({message:err})
-        const registerUser=new UserModel({...resUser,password:hash})
-        await registerUser.save()
-        res.status(200).send({message:"new user resistered",name:registerUser.name})
+        const registerAdmin=new AdminModel({...resAdmin,password:hash})
+        await registerAdmin.save()
+        res.status(200).send({message:"new Admin resistered",name:registerAdmin.name})
 
     })
   }   
@@ -36,18 +36,18 @@ userRoute.post("/register",async(req,res)=>{
     res.status(404).send({message:error})
 }
 })
-userRoute.post("/login",async(req,res)=>{
+AdminRoute.post("/login",async(req,res)=>{
     const { email, password } = req.body;
     try {
-      const user = await UserModel.findOne({ email});
-      // console.log("user-->",user);
-      if (user) {
-        bcrypt.compare(password, user.password, (err, result) => {
+      const Admin = await AdminModel.findOne({ email});
+      // console.log("Admin-->",Admin);
+      if (Admin) {
+        bcrypt.compare(password, Admin.password, (err, result) => {
           if (result) {
             const token = jwt.sign(
-              { userID: user._id, user: user.name },
-              "masai",
-              { expiresIn: "7d" }
+              { AdminID: Admin._id, Admin: Admin.name },
+              "admin",
+              { expiresIn: "7d"}
             );
             console.log("Token-->",token);
             res.status(200).send({ message:"login successful",token:token});
@@ -63,7 +63,7 @@ userRoute.post("/login",async(req,res)=>{
     }
 })
 
-userRoute.get("/logout",async(req,res)=>{
+AdminRoute.get("/logout",async(req,res)=>{
     try {
         const token=req.headers.authorization
         console.log("BK Token",token)
@@ -77,6 +77,6 @@ userRoute.get("/logout",async(req,res)=>{
     }
 })
 module.exports={
-    userRoute
+    AdminRoute
 }
 

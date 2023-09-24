@@ -1,19 +1,15 @@
 const mongoose=require("mongoose");
 
-const postSchema=mongoose.Schema({
-    name :String,
-    image :String,
-    device: {
-        type: String,
-        enum: ["Laptop", "Mobile", "Tablet"]
-      },
-      price:Number,
-    rating: Number,
-    userID:String,
-     user:String
-  
-})
-const PostModel=mongoose.model("productData",postSchema);
+const ProductSchema=mongoose.Schema({
+  category:String,
+  name: String,
+  image:String,
+  rating: Number,
+  price: Number,
+  details:String,
+  gender:String
+},{versionKey:false})
+const ProductModel=mongoose.model("productData",ProductSchema);
 module.exports={
-    PostModel
+  ProductModel
 }

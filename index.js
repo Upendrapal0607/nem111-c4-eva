@@ -1,14 +1,17 @@
 const { connection } = require("./db");
+const mongoose = require("mongoose")
 const cors=require("cors")
 const express=require("express");
 const { userRoute } = require("./Route/UserRoute");
-const { postRoute } = require("./Route/PostRoute");
+const { productRoute } = require("./Route/ProductRoute");
+const { AdminRoute } = require("./Route/AdminRoute");
 // const { postRoute } = require("./Route/PosRoute");
 const app= express();
 app.use(express.json())
 app.use(cors())
 app.use("/users",userRoute)
-app.use("/products",postRoute)
+app.use("/admins",AdminRoute)
+app.use("/products",productRoute)
  app.listen(8080,async()=>{
    try {
     await connection
