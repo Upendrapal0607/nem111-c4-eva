@@ -4,6 +4,7 @@ const auth = async (req, res, next) => {
   // console.log(req);
   try {
     const token = req.headers.authorization;
+    console.log((token));
     if (token) {
       const blacklistedToken = await BlackList.findOne({ token: token });
       if (blacklistedToken) {
@@ -13,7 +14,7 @@ const auth = async (req, res, next) => {
           console.log("decode", decode);
           if (decode) {
             req.body.userID = decode.userID;
-            req.body.user = decode.user;
+            req.body.userName = decode.user;
             next();
           } else res.send({ message: "error" });
         });

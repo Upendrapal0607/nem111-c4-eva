@@ -8,17 +8,26 @@ const productRoute = express.Router();
 
 productRoute.get("/", async (req, res) => {
   try {
-    const { category, rating, gender, q, sortBy, page, limit } = req.query;
+    const { category, rating, gender,name, q, sort,order, page, limit } = req.query;
+    console.log({category, rating, gender, q, sort,order, page, limit});
     //  for example  basic Url = "http://localhost:8080/movie?page=2&limit=2&sortBy=asc"
 
     const query = {}; // all query Object
 
     //  if title is in query
-    if (category) {
-      query.category = new RegExp(category, "i"); // Case-insensitive title search
+    if (Array.isArray(category)) {
+      query.category = { $in: category };
+      // query.category = new RegExp(category, "i"); // Case-insensitive title search
     }
-    if (gender) {
-      query.gender = new RegExp(gender, "i"); // Case-insensitive title search
+    else if(category){
+query.category=category
+    }
+    if (Array.isArray(gender)) {
+      query.gender= {$in:gender}
+    }
+    else if(gender){
+      // query.gender = new RegExp(gender, "i"); // Case-insensitive title search
+      query.gender=gender
     }
     //  if rating is in query
     if (rating) {
@@ -28,8 +37,9 @@ productRoute.get("/", async (req, res) => {
     //  if any query is in query it is special for title
     if (q) {
       query.$or = [
-        { title: new RegExp(q, "i") },
+        { name: new RegExp(q, "i") },
         { gender: new RegExp(q, "i") },
+        { category: new RegExp(q, "i") },
       ];
     }
 
@@ -37,8 +47,8 @@ productRoute.get("/", async (req, res) => {
     const sortOptions = {};
 
     //   sorting by id
-    if (sortBy) {
-      sortOptions["rating"] = sortBy == "asc" ? 1 : -1; // 1 for ascending, -1 for descending
+    if (sort&&order) {
+      sortOptions[sort] = order == "asc" ? 1 : -1; // 1 for ascending, -1 for descending
     }
 
     const pageNumber = parseInt(page) || 1; // page come form query if not then by default 1
