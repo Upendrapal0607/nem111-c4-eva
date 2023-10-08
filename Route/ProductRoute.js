@@ -5,11 +5,18 @@ const { ProductModel } = require("../Model/Product");
 // const { ProductModel } = require("../Model/ProductModel");
 
 const productRoute = express.Router();
+// productRoute.get("/",(req,res)=>{
+//   try {
+//     res.send("hell")
+//   } catch (error) {
+//     res.send({error})
+//   }
+// })
 
 productRoute.get("/", async (req, res) => {
   try {
     const { category, rating, gender,name, q, sort,order, page, limit } = req.query;
-    console.log({category, rating, gender, q, sort,order, page, limit});
+    // console.log({category, rating, gender, q, sort,order, page, limit});
     //  for example  basic Url = "http://localhost:8080/movie?page=2&limit=2&sortBy=asc"
 
     const query = {}; // all query Object
@@ -105,8 +112,6 @@ productRoute.patch("/update/:productId", AdminAuth, async (req, res) => {
 productRoute.delete("/delete/:productId", AdminAuth, async (req, res) => {
   try {
     const { productId } = req.params;
-    
-
     await ProductModel.findByIdAndDelete({ _id: productId });
     res
       .status(200)

@@ -10,6 +10,9 @@ const { CartRoute } = require("./Route/CartRoute");
 const app= express();
 app.use(express.json())
 app.use(cors())
+app.get("/",(req,res)=>{
+res.send({hello})
+})
 app.use("/users",userRoute)
 app.use("/admins",AdminRoute)
 app.use("/products",productRoute)

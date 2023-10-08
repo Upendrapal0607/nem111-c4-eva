@@ -11,7 +11,9 @@ const CartProductSchema=mongoose.Schema({
   details:String,
   gender:String,
   userId:String,
-  userName:String
+  userName:String,
+  productId:String,
+  productCount:Number
 },{versionKey:false})
 const CartProductModel=mongoose.model("cartproductData",CartProductSchema);
 module.exports={

@@ -50,7 +50,7 @@ AdminRoute.post("/login",async(req,res)=>{
               { expiresIn: "7d"}
             );
             console.log("Token-->",token);
-            res.status(200).send({ message:"login successful",token:token});
+            res.status(200).send({ message:"login successful",token,Admin,login_role:"admin"});
           } else {
             res.status(200).send({ message: "wrong password or email" });
           }

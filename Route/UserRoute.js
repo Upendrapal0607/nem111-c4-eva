@@ -40,17 +40,18 @@ userRoute.post("/login",async(req,res)=>{
     const { email, password } = req.body;
     try {
       const user = await UserModel.findOne({ email});
-      // console.log("user-->",user);
       if (user) {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
+            const expirationTime =
+            Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
             const token = jwt.sign(
               { userID: user._id, user: user.name },
               "masai",
               { expiresIn: "7d" }
             );
-            console.log("Token-->",token);
-            res.status(200).send({ message:"login successful",token:token});
+            // console.log({token});
+            res.status(200).send({ message:"login successful",token,user,login_role:"user"});
           } else {
             res.status(200).send({ message: "wrong password or email" });
           }
@@ -66,7 +67,7 @@ userRoute.post("/login",async(req,res)=>{
 userRoute.get("/logout",async(req,res)=>{
     try {
         const token=req.headers.authorization
-        console.log("BK Token",token)
+        // console.log("BK Token",token)
    const blacklist= new BlackList({token})
    await blacklist.save()
    res.status(200).send({message:"loguot successful"})
